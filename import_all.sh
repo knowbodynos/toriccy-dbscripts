@@ -21,9 +21,6 @@ DB=""
 USERNAME_RW=""
 PASSWORD_RW=""
 
-DIR=$(dirname "${BASH_SOURCE[0]}")
-. ${DIR}/secrets.sh
-
 while [ $# -gt 0 ]; do
     case "$1" in
         --host)
@@ -66,7 +63,7 @@ if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_RW} ] || 
     exit 1
 fi
 
-mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --out=indexes.json
+mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --file=indexes.json
 
 for i in {1..6}; do
     mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --file="00${i}.poly.json"

@@ -21,9 +21,6 @@ DB=""
 USERNAME_R=""
 PASSWORD_R=""
 
-DIR=$(dirname "${BASH_SOURCE[0]}")
-. ${DIR}/secrets.sh
-
 while [ $# -gt 0 ]; do
     case "$1" in
         --host)
