@@ -1,0 +1,5 @@
+$HOME/webapps/mongodb/mongodb-linux-x86_64-3.0.7/bin/mongod --auth --dbpath $HOME/webapps/mongodb/data --logpath $HOME/webapps/mongodb/logs/mongodb.log --port 28555 > $HOME/tmp/mongod.log &
+
+mongo --username raltman --password kreuzer --authenticationDatabase admin localhost:28555/ToricCY
+
+mongoimport --port 28555 --username manager --password toric --db ToricCY --collection TRIANG --file 003.triang --batchSize 1
