@@ -11,15 +11,19 @@ usage() {
     echo "  --db              Database"
     echo "  --username        Username"
     echo "  --password        Password"
+    echo "  --files_dir       Files dir"
     echo "  -h, --help        Display this help and exit"
     echo -e ${msg}
 }
 
-HOST=""
-PORT=""
+HOST="localhost"
+PORT="27017"
 DB=""
 USERNAME_RW=""
 PASSWORD_RW=""
+FILES_DIR=""
+
+DIR=$(dirname ${BASH_SOURCE[0]})
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -48,6 +52,11 @@ while [ $# -gt 0 ]; do
             shift
             shift
             ;;
+        --files_dir)
+          FILES_DIR=$2
+            shift
+            shift
+            ;;
         --help|-h)
             usage
             exit 0
@@ -63,14 +72,14 @@ if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_RW} ] || 
     exit 1
 fi
 
-mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --file=indexes.json
+mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --file="${FILES_DIR}/indexes.json"
 
 for i in {1..6}; do
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --file="00${i}.poly.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --file="00${i}.geom.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --file="00${i}.triang.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --file="00${i}.invol.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --file="00${i}.swisscheese.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --file="${FILES_DIR}/00${i}.poly.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --file="${FILES_DIR}/00${i}.geom.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --file="${FILES_DIR}/00${i}.triang.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --file="${FILES_DIR}/00${i}.invol.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --file="${FILES_DIR}/00${i}.swisscheese.json"
 done
 
 while read line; do

@@ -15,8 +15,8 @@ usage() {
     echo -e ${msg}
 }
 
-HOST=""
-PORT=""
+HOST="localhost"
+PORT="27017"
 DB=""
 USERNAME_R=""
 PASSWORD_R=""
