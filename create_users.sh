@@ -21,7 +21,7 @@ usage() {
 
 HOST="localhost"
 PORT="27017"
-DB=""
+DB="ToricCY"
 USERNAME_ADMIN=""
 PASSWORD_ADMIN=""
 USERNAME_RW=""

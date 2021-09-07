@@ -16,14 +16,14 @@ usage() {
     echo -e ${msg}
 }
 
+DIR=$(dirname ${BASH_SOURCE[0]})
+
 HOST="localhost"
 PORT="27017"
-DB=""
+DB="ToricCY"
 USERNAME_RW=""
 PASSWORD_RW=""
-FILES_DIR=""
-
-DIR=$(dirname ${BASH_SOURCE[0]})
+FILES_DIR="${DIR}"
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -67,22 +67,32 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_RW} ] || [ -z ${PASSWORD_RW} ]; then
+if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_RW} ] || [ -z ${PASSWORD_RW} ] || [ -z ${FILES_DIR} ]; then
     usage
     exit 1
 fi
 
+echo "Importing '${DB}.INDEXES'"
 mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --mode="upsert" --file="${FILES_DIR}/indexes.json"
+wait
 
 for i in {1..6}; do
+    echo "Importing '${DB}.POLY.H11': ${i}..."
     mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --mode="upsert" --file="${FILES_DIR}/00${i}.poly.json"
+    wait
+    echo "Importing '${DB}.GEOM.H11': ${i}..."
     mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --mode="upsert" --file="${FILES_DIR}/00${i}.geom.json"
+    wait
+    echo "Importing '${DB}.TRIANG.H11': ${i}..."
     mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --mode="upsert" --file="${FILES_DIR}/00${i}.triang.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --mode="upsert" --file="${FILES_DIR}/00${i}.invol.json"
+    wait
+    echo "Importing '${DB}.SWISSCHEESE.H11': ${i}..."
     mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --mode="upsert" --file="${FILES_DIR}/00${i}.swisscheese.json"
+    wait
+    echo "Importing '${DB}.INVOL.H11': ${i}..."
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --mode="upsert" --file="${FILES_DIR}/00${i}.invol.json"
+    wait
 done
 
-while read line; do
-     mongo --host=${HOST} --port ${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --eval "$(echo ${line} | sed 's/"/\"/g')" ${DB}
-     wait
-done < ${DIR}/indexes
+echo "Importing '${DB}.INDEXES'"
+mongo --host=${HOST} --port ${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} ${DIR}/indexes.js ${DB}
