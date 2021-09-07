@@ -1,3 +1,4 @@
+use ToricCY
 db.POLY.createIndex({'H11': 1});
 db.POLY.createIndex({'H21': 1});
 db.POLY.createIndex({'POLYN': 1});

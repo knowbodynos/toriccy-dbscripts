@@ -94,5 +94,7 @@ for i in {1..6}; do
     wait
 done
 
-echo "Importing '${DB}.INDEXES'"
-mongo --host=${HOST} --port ${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} ${DIR}/indexes.js
+echo "Indexing..."
+mongo --host=${HOST} --port ${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} < ${DIR}/indexes.js
+
+echo "Done!"
