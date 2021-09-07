@@ -72,14 +72,14 @@ if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_RW} ] || 
     exit 1
 fi
 
-mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --file="${FILES_DIR}/indexes.json"
+mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --mode="upsert" --file="${FILES_DIR}/indexes.json"
 
 for i in {1..6}; do
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --file="${FILES_DIR}/00${i}.poly.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --file="${FILES_DIR}/00${i}.geom.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --file="${FILES_DIR}/00${i}.triang.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --file="${FILES_DIR}/00${i}.invol.json"
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --file="${FILES_DIR}/00${i}.swisscheese.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --mode="upsert" --file="${FILES_DIR}/00${i}.poly.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --mode="upsert" --file="${FILES_DIR}/00${i}.geom.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --mode="upsert" --file="${FILES_DIR}/00${i}.triang.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --mode="upsert" --file="${FILES_DIR}/00${i}.invol.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --mode="upsert" --file="${FILES_DIR}/00${i}.swisscheese.json"
 done
 
 while read line; do
