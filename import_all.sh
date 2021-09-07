@@ -73,24 +73,24 @@ if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_RW} ] || 
 fi
 
 echo "Importing '${DB}.INDEXES'"
-mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --mode="upsert" --file="${FILES_DIR}/indexes.json"
+mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INDEXES --mode="upsert" --batchSize 100 --file="${FILES_DIR}/indexes.json"
 wait
 
 for i in {1..6}; do
     echo "Importing '${DB}.POLY.H11': ${i}..."
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --mode="upsert" --file="${FILES_DIR}/00${i}.poly.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=POLY --mode="upsert" --batchSize 100 --file="${FILES_DIR}/00${i}.poly.json"
     wait
     echo "Importing '${DB}.GEOM.H11': ${i}..."
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --mode="upsert" --file="${FILES_DIR}/00${i}.geom.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=GEOM --mode="upsert" --batchSize 100 --file="${FILES_DIR}/00${i}.geom.json"
     wait
     echo "Importing '${DB}.TRIANG.H11': ${i}..."
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --mode="upsert" --file="${FILES_DIR}/00${i}.triang.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=TRIANG --mode="upsert" --batchSize 100 --file="${FILES_DIR}/00${i}.triang.json"
     wait
     echo "Importing '${DB}.SWISSCHEESE.H11': ${i}..."
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --mode="upsert" --file="${FILES_DIR}/00${i}.swisscheese.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=SWISSCHEESE --mode="upsert" --batchSize 100 --file="${FILES_DIR}/00${i}.swisscheese.json"
     wait
     echo "Importing '${DB}.INVOL.H11': ${i}..."
-    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --mode="upsert" --file="${FILES_DIR}/00${i}.invol.json"
+    mongoimport --host=${HOST} --port=${PORT} --username=${USERNAME_RW} --password=${PASSWORD_RW} --db=${DB} --collection=INVOL --mode="upsert" --batchSize 100 --file="${FILES_DIR}/00${i}.invol.json"
     wait
 done
 
