@@ -16,6 +16,15 @@ usage() {
     echo -e ${msg}
 }
 
+mongoexport_func() {
+    mongoexport --host=${HOST} \
+                --port=${PORT} \
+                --username=${USERNAME_R} \
+                --password=${PASSWORD_R} \
+                --db=${DB}
+                "$@"
+}
+
 DIR=$(dirname ${BASH_SOURCE[0]})
 
 HOST="localhost"
@@ -73,23 +82,33 @@ if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_R} ] || [
 fi
 
 echo "Exporting '${DB}.INDEXES'"
-mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_R} --password=${PASSWORD_R} --db=${DB} --collection=INDEXES --out="${FILES_DIR}/indexes.json"
+mongoexport_func --collection=INDEXES --out="${FILES_DIR}/indexes.json"
 wait
 
 for i in {1..6}; do
     echo "Exporting '${DB}.POLY.H11': ${i}..."
-    mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_R} --password=${PASSWORD_R} --db=${DB} --collection=POLY --query="{'H11': ${i}}" --out="${FILES_DIR}/00${i}.poly.json"
+    mongoexport_func --query="{'H11': ${i}}" \
+                     --collection=POLY \
+                     --out="${FILES_DIR}/00${i}.poly.json"
     wait
     echo "Exporting '${DB}.GEOM.H11': ${i}..."
-    mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_R} --password=${PASSWORD_R} --db=${DB} --collection=GEOM --query="{'H11': ${i}}" --out="${FILES_DIR}/00${i}.geom.json"
+    mongoexport_func --query="{'H11': ${i}}" \
+                     --collection=GEOM \
+                     --out="${FILES_DIR}/00${i}.geom.json"
     wait
     echo "Exporting '${DB}.TRIANG.H11': ${i}..."
-    mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_R} --password=${PASSWORD_R} --db=${DB} --collection=TRIANG --query="{'H11': ${i}}" --out="${FILES_DIR}/00${i}.triang.json"
+    mongoexport_func --query="{'H11': ${i}}" \
+                     --collection=TRIANG \
+                     --out="${FILES_DIR}/00${i}.triang.json"
     wait
     echo "Exporting '${DB}.SWISSCHEESE.H11': ${i}..."
-    mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_R} --password=${PASSWORD_R} --db=${DB} --collection=SWISSCHEESE --query="{'H11': ${i}}" --out="${FILES_DIR}/00${i}.swisscheese.json"
+    mongoexport_func --query="{'H11': ${i}}" \
+                     --collection=SWISSCHEESE \
+                     --out="${FILES_DIR}/00${i}.swisscheese.json"
     wait
     echo "Exporting '${DB}.INVOL.H11': ${i}..."
-    mongoexport --host=${HOST} --port=${PORT} --username=${USERNAME_R} --password=${PASSWORD_R} --db=${DB} --collection=INVOL --query="{'H11': ${i}}" --out="${FILES_DIR}/00${i}.invol.json"
+    mongoexport_func --query="{'H11': ${i}}" \
+                     --collection=INVOL \
+                     --out="${FILES_DIR}/00${i}.invol.json"
     wait
 done

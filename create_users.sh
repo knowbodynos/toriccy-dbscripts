@@ -88,7 +88,6 @@ done
 
 mongo --host ${HOST} \
       --port ${PORT} \
-      --authenticationDatabase admin \
       --eval "db.createUser({'user': '${USERNAME_ADMIN}',
                              'pwd': '${PASSWORD_ADMIN}',
                              'roles': [{'role': 'root',
@@ -96,7 +95,6 @@ mongo --host ${HOST} \
 
 mongo --host ${HOST} \
       --port ${PORT} \
-      --authenticationDatabase admin \
       --eval "db.createUser({'user': '${USERNAME_RW}',
                              'pwd': '${PASSWORD_RW}',
                              'roles': [{'role': 'readWrite',
@@ -104,7 +102,6 @@ mongo --host ${HOST} \
 
 mongo --host ${HOST} \
       --port ${PORT} \
-      --authenticationDatabase admin \
       --eval "db.createUser({'user': '${USERNAME_R}',
                              'pwd': '${PASSWORD_R}',
                              'roles': [{'role': 'read',
