@@ -11,6 +11,7 @@ usage() {
     echo "  --db              Database"
     echo "  --username        Username"
     echo "  --password        Password"
+    echo "  --type            Output file type (json, csv)"
     echo "  --files_dir       Files dir"
     echo "  -h, --help        Display this help and exit"
     echo -e ${msg}
@@ -32,6 +33,7 @@ PORT="27017"
 DB="ToricCY"
 USERNAME_R=""
 PASSWORD_R=""
+TYPE="json"
 FILES_DIR="${DIR}"
 
 while [ $# -gt 0 ]; do
@@ -61,8 +63,13 @@ while [ $# -gt 0 ]; do
             shift
             shift
             ;;
+	--type)
+	    TYPE=$2
+	    shift
+	    shift
+	    ;;
         --files_dir)
-          FILES_DIR=$2
+            FILES_DIR=$2
             shift
             shift
             ;;
@@ -81,34 +88,40 @@ if [ -z ${HOST} ] || [ -z ${PORT} ] || [ -z ${DB} ] || [ -z ${USERNAME_R} ] || [
     exit 1
 fi
 
-echo "Exporting '${DB}.INDEXES'"
-mongoexport_func --collection=INDEXES --out="${FILES_DIR}/indexes.json"
-wait
-
 for i in {1..6}; do
     echo "Exporting '${DB}.POLY.H11': ${i}..."
-    mongoexport_func --query="{'H11': ${i}}" \
+    mongoexport_func --query="{\"H11\": ${i}}" \
                      --collection=POLY \
-                     --out="${FILES_DIR}/00${i}.poly.json"
+                     --type="${TYPE}" \
+		     --fields="BASIS,H21,NVERTS,DTOJ,EULER,DRESVERTS,NNPOINTS,POLYID,FAV,NDVERTS,DVERTS,FUNDGP,H11,CWS,NNVERTS,RESCWS,NGEOMS,NALLTRIANGS,INVBASIS,JTOD,NDPOINTS,POLYN" \
+		     --out="${FILES_DIR}/00${i}.poly.${TYPE}"
     wait
     echo "Exporting '${DB}.GEOM.H11': ${i}..."
-    mongoexport_func --query="{'H11': ${i}}" \
+    mongoexport_func --query="{\"H11\": ${i}}" \
                      --collection=GEOM \
-                     --out="${FILES_DIR}/00${i}.geom.json"
+                     --type="${TYPE}" \
+		     --fields="MORIMAT,CHERN2XJ,KAHLERMAT,IPOLYXJ,NTRIANGS,POLYID,CHERN2XNUMS,H11,GEOMN,ITENSXJ" \
+		     --out="${FILES_DIR}/00${i}.geom.${TYPE}"
     wait
     echo "Exporting '${DB}.TRIANG.H11': ${i}..."
-    mongoexport_func --query="{'H11': ${i}}" \
+    mongoexport_func --query="{\"H11\": ${i}}" \
                      --collection=TRIANG \
-                     --out="${FILES_DIR}/00${i}.triang.json"
+		     --type="${TYPE}" \
+		     --fields="CHERNAD,TRIANG,TRIANGN,POLYID,ALLTRIANGN,CHERNAJ,ITENSXD,SRIDEAL,CHERN3XD,CHERN3XJ,CHERN2XD,H11,GEOMN,KAHLERMATP,IPOLYAD,MORIMATP,IPOLYXD,IPOLYAJ,ITENSAD,ITENSAJ,DIVCOHOM,NINVOL" \
+                     --out="${FILES_DIR}/00${i}.triang.${TYPE}"
     wait
     echo "Exporting '${DB}.SWISSCHEESE.H11': ${i}..."
-    mongoexport_func --query="{'H11': ${i}}" \
+    mongoexport_func --query="{\"H11\": ${i}}" \
                      --collection=SWISSCHEESE \
-                     --out="${FILES_DIR}/00${i}.swisscheese.json"
+                     --type="${TYPE}" \
+		     --fields="GEOMN,NLARGE,POLYID,HOM,RMAT4CYCLE,H11,INTBASIS4CYCLE,RMAT2CYCLE,INTBASIS2CYCLE" \
+		     --out="${FILES_DIR}/00${i}.swisscheese.${TYPE}"
     wait
     echo "Exporting '${DB}.INVOL.H11': ${i}..."
-    mongoexport_func --query="{'H11': ${i}}" \
+    mongoexport_func --query="{\"H11\": ${i}}" \
                      --collection=INVOL \
-                     --out="${FILES_DIR}/00${i}.invol.json"
+		     --type="${TYPE}" \
+		     --fields="TRIANGN,POLYID,H11,INVOL,INVOLN,GEOMN,H21+,H21-,OPLANES,NSYMCYTERMS,H11+,H11-,NCYTERMS,INVOLDIVCOHOM,CYPOLY,SYMCYPOLY,SRINVOL,ITENSXDINVOL,SMOOTH,VOLFORMPARITY" \
+                     --out="${FILES_DIR}/00${i}.invol.${TYPE}"
     wait
 done
